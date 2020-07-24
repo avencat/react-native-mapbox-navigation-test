@@ -6,77 +6,51 @@
  * @flow strict-local
  */
 
-import React, { useCallback } from 'react'
+import React, { useState } from 'react';
 import {
   Button,
-  NativeModules,
   SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
+  StyleSheet,
+  View,
 } from 'react-native';
 
 import {
-  Header,
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
+import MapView from './MapView';
+
 const App: () => React$Node = () => {
-  const launchGPS = useCallback(() => {
-    NativeModules.RNMapboxNavigation.takeMeToWH();
-  }, [])
+  const [isVisible, setIsVisible] = useState<boolean>(false)
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        >
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <Button title={'Launch GPS'} onPress={launchGPS} />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+      <View style={{ backgroundColor: 'red', flex: 1 }}>
+        {isVisible && (
+          <MapView
+            style={styles.map}
+            waypoints={[
+              [46.0, 8.0],
+              [46.1, 8.0],
+            ]}
+          />
+        )}
+      </View>
+      <Button title={`${isVisible ? 'Hide' : 'Show'} GPS`} style={{ position: 'absolute', bottom: 50, right: 0 }} onPress={() => setIsVisible(!isVisible)} />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  body: {
-    backgroundColor: Colors.dark,
-  },
-
   container: {
     backgroundColor: Colors.dark,
     flex: 1,
   },
 
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-
-  footer: {
-    color: Colors.lighter,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-
-  scrollView: {
-    backgroundColor: Colors.dark,
+  map: {
+    flex: 1,
   },
 });
 

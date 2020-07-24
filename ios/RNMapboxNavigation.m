@@ -5,16 +5,14 @@
 //  Created by Axel Vencatareddy on 16/07/2020.
 //
 
-#import <Foundation/Foundation.h>
-#import <React/RCTBridgeModule.h>
+#import "React/RCTViewManager.h"
 
-@interface RCT_EXTERN_MODULE(RNMapboxNavigation, NSObject)
+@interface RCT_EXTERN_MODULE(RNMapboxNavigationManager, RCTViewManager)
 
-RCT_EXTERN_METHOD(takeMeToWH)
-
-+ (BOOL)requiresMainQueueSetup
-{
-  return NO;
-}
+RCT_EXPORT_VIEW_PROPERTY(onProgressChange, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(origin, NSArray)
+RCT_EXPORT_VIEW_PROPERTY(destination, NSArray)
+RCT_EXPORT_VIEW_PROPERTY(isMuted, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(shouldSimulateRoute, BOOL)
 
 @end

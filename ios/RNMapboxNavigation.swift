@@ -4,49 +4,93 @@
 //
 //  Created by Axel Vencatareddy on 16/07/2020.
 //
+//
+//  RNMapboxNavigation.swift
+//  Topicimes
+//
+//  Created by Axel Vencatareddy on 16/07/2020.
+//
 
-import Foundation
-import MapboxDirections
 import MapboxCoreNavigation
+import MapboxDirections
 import MapboxNavigation
 
-@objc(RNMapboxNavigation)
-class RNMapboxNavigation: NSObject {
+class RNMapboxNavigationView: UIView, NavigationViewControllerDelegate {
+  var voiceController: CustomVoiceController?
 
-  @objc
-  func takeMeToWH() {
-    // Define two waypoints to travel between
-    let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
-    let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
+  @objc var waypoints: [[NSNumber]] = [] {
+    didSet { startNavigation() }
+  }
 
-    // Set options
-    let routeOptions = NavigationRouteOptions(waypoints: [origin, destination])
+  @objc var shouldSimulateRoute: Bool = false
 
-    // Request a route using MapboxDirections
-    Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
-        switch result {
-        case .failure(let error):
-            print(error.localizedDescription)
-        case .success(let response):
-            guard let route = response.routes?.first, let strongSelf = self else {
-                return
-            }
-            // Pass the generated route to the the NavigationViewController
-            let viewController = NavigationViewController(for: route, routeOptions: routeOptions)
-            viewController.modalPresentationStyle = .fullScreen
-
-            let appDelegate = UIApplication.shared.delegate
-
-            appDelegate!.window!!.rootViewController!.present(viewController, animated: true, completion: nil)
-        }
+  @objc var isMuted: Bool = false {
+    didSet {
+      guard voiceController != nil else { return }
+      voiceController?.isMuted = isMuted
     }
   }
 
-  static func moduleName() -> String! {
-        return "RNMapboxNavigation";
+  @objc var onProgressChange: RCTDirectEventBlock?
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
   }
 
-  static func requiresMainQueueSetup() -> Bool {
-      return true
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  func startNavigation() {
+    NSLog("test");
+    var allWaypoints: [Waypoint] = []
+
+    NSLog("test1");
+    waypoints.forEach { (waypoint) in
+      guard (waypoint).count == 2 else { NSLog("1"); return }
+      NSLog("waypoint" + waypoint[0].stringValue + waypoint[1].stringValue);
+      allWaypoints.append(Waypoint(coordinate: CLLocationCoordinate2D(latitude: waypoint[0] as! CLLocationDegrees, longitude: waypoint[1] as! CLLocationDegrees)))
+    }
+    NSLog("test2");
+
+    let options = NavigationRouteOptions(waypoints: allWaypoints, profileIdentifier: .walking)
+
+    Directions.shared.calculate(options) { [weak self] (session, result) in
+      switch result {
+        case .failure(let error):
+            print(error.localizedDescription)
+        case .success(let response):
+          guard let route = response.routes?.first, let _ = self else { NSLog("2"); return }
+
+            let navigationService = MapboxNavigationService(route: route, routeOptions: options, simulating: self!.shouldSimulateRoute ? .always : .onPoorGPS)
+
+            self!.voiceController = CustomVoiceController(navigationService: navigationService)
+            self!.voiceController?.isMuted = self!.isMuted
+
+            let navigationOptions = NavigationOptions(navigationService: navigationService, voiceController: self!.voiceController)
+            let navigationViewController = NavigationViewController(for: route, routeOptions: options, navigationOptions: navigationOptions)
+            navigationViewController.delegate = self
+
+            let view = navigationViewController.view!
+            view.frame = self!.frame
+            view.bounds = self!.bounds
+
+            self?.addSubview(view)
+      }
+    }
+  }
+
+  func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    onProgressChange!(["longitude": location.coordinate.longitude, "latitude": location.coordinate.latitude])
+  }
+}
+
+class CustomVoiceController: MapboxVoiceController {
+  var isMuted = false
+
+  override func didPassSpokenInstructionPoint(notification: NSNotification) {
+    if isMuted == false {
+      super.didPassSpokenInstructionPoint(notification: notification)
+    }
   }
 }

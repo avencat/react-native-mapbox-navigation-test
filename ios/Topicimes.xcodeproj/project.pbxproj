@@ -20,6 +20,7 @@
 		B4D5EB0ACEB50708BAFFF6C5 /* Pods_Topicimes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CAB62677413F39F96F9B2E /* Pods_Topicimes.framework */; };
 		D069FEC924C06B4F0049FD0F /* RNMapboxNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D069FEC824C06B4F0049FD0F /* RNMapboxNavigation.swift */; };
 		D069FECB24C06C1D0049FD0F /* RNMapboxNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = D069FECA24C06C1D0049FD0F /* RNMapboxNavigation.m */; };
+		D0D599FF24C197CA004489DF /* RNMapboxNavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D599FE24C197CA004489DF /* RNMapboxNavigationManager.swift */; };
 		ECF9D2BABC1E63CCC46C88F8 /* libPods-Topicimes-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 768A0B8C8224688A34DBB177 /* libPods-Topicimes-tvOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		D069FEC724C06B4E0049FD0F /* Topicimes-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Topicimes-Bridging-Header.h"; sourceTree = "<group>"; };
 		D069FEC824C06B4F0049FD0F /* RNMapboxNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNMapboxNavigation.swift; sourceTree = "<group>"; };
 		D069FECA24C06C1D0049FD0F /* RNMapboxNavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNMapboxNavigation.m; sourceTree = "<group>"; };
+		D0D599FE24C197CA004489DF /* RNMapboxNavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNMapboxNavigationManager.swift; sourceTree = "<group>"; };
 		D3AE406AB179D39B3FB6DA58 /* Pods-Topicimes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Topicimes.debug.xcconfig"; path = "Target Support Files/Pods-Topicimes/Pods-Topicimes.debug.xcconfig"; sourceTree = "<group>"; };
 		E09323424FD7EE9C1F8B6B28 /* Pods-Topicimes-TopicimesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Topicimes-TopicimesTests.release.xcconfig"; path = "Target Support Files/Pods-Topicimes-TopicimesTests/Pods-Topicimes-TopicimesTests.release.xcconfig"; sourceTree = "<group>"; };
 		E7C90A2514B5D566E50086BD /* Pods-Topicimes-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Topicimes-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Topicimes-tvOSTests/Pods-Topicimes-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				D069FEC824C06B4F0049FD0F /* RNMapboxNavigation.swift */,
 				D069FECA24C06C1D0049FD0F /* RNMapboxNavigation.m */,
 				D069FEC724C06B4E0049FD0F /* Topicimes-Bridging-Header.h */,
+				D0D599FE24C197CA004489DF /* RNMapboxNavigationManager.swift */,
 			);
 			name = Topicimes;
 			sourceTree = "<group>";
@@ -722,6 +725,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0D599FF24C197CA004489DF /* RNMapboxNavigationManager.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				D069FECB24C06C1D0049FD0F /* RNMapboxNavigation.m in Sources */,
