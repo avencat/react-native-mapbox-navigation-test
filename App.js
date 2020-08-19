@@ -32,13 +32,18 @@ const App: () => React$Node = () => {
           <MapView
             style={styles.map}
             waypoints={[
-              [46.0, 8.0],
-              [46.1, 8.0],
+              [38.9131752, -77.0324047],
+              [38.8977, -77.0365],
             ]}
           />
         )}
       </View>
-      <Button title={`${isVisible ? 'Hide' : 'Show'} GPS`} style={{ position: 'absolute', bottom: 50, right: 0 }} onPress={() => setIsVisible(!isVisible)} />
+      <View style={{ alignItems: 'center', justifyContent: 'center', left: 165, position: 'absolute', top: 400 }}>
+        <Button
+          title={`${isVisible ? 'Hide' : 'Show'} GPS`}
+          onPress={() => setIsVisible(!isVisible)}
+        />
+      </View>
     </SafeAreaView>
   );
 };

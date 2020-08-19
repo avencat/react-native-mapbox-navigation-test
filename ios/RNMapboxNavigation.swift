@@ -42,25 +42,20 @@ class RNMapboxNavigationView: UIView, NavigationViewControllerDelegate {
   }
 
   func startNavigation() {
-    NSLog("test");
     var allWaypoints: [Waypoint] = []
 
-    NSLog("test1");
-    waypoints.forEach { (waypoint) in
-      guard (waypoint).count == 2 else { NSLog("1"); return }
-      NSLog("waypoint" + waypoint[0].stringValue + waypoint[1].stringValue);
+    for waypoint in waypoints {
+      guard (waypoint).count == 2 else { return }
       allWaypoints.append(Waypoint(coordinate: CLLocationCoordinate2D(latitude: waypoint[0] as! CLLocationDegrees, longitude: waypoint[1] as! CLLocationDegrees)))
     }
-    NSLog("test2");
 
     let options = NavigationRouteOptions(waypoints: allWaypoints, profileIdentifier: .walking)
-
     Directions.shared.calculate(options) { [weak self] (session, result) in
       switch result {
         case .failure(let error):
             print(error.localizedDescription)
         case .success(let response):
-          guard let route = response.routes?.first, let _ = self else { NSLog("2"); return }
+          guard let route = response.routes?.first, let _ = self else { return }
 
             let navigationService = MapboxNavigationService(route: route, routeOptions: options, simulating: self!.shouldSimulateRoute ? .always : .onPoorGPS)
 
