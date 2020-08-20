@@ -15,6 +15,16 @@ import MapboxCoreNavigation
 import MapboxDirections
 import MapboxNavigation
 
+extension Encodable {
+  func asDictionary() throws -> [String: Any] {
+    let data = try JSONEncoder().encode(self)
+    guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+      throw NSError()
+    }
+    return dictionary
+  }
+}
+
 class RNMapboxNavigationView: UIView, NavigationViewControllerDelegate {
   var voiceController: CustomVoiceController?
 
@@ -76,7 +86,47 @@ class RNMapboxNavigationView: UIView, NavigationViewControllerDelegate {
   }
 
   func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-    onProgressChange!(["longitude": location.coordinate.longitude, "latitude": location.coordinate.latitude])
+    let currentStepProgress = progress.currentLegProgress.currentStepProgress
+    let currentStepDictionnary: Dictionary<String, Any>
+    do {
+        currentStepDictionnary = try progress.currentLegProgress.currentStep.asDictionary()
+    } catch let error {
+        print(error)
+        return
+    }
+    let routeDictionnary: Dictionary<String, Any>
+    do {
+        routeDictionnary = try progress.route.asDictionary()
+    } catch let error {
+        print(error)
+        return
+    }
+    
+    let step = currentStepProgress.step
+
+    onProgressChange?([
+      "longitude": location.coordinate.longitude,
+      "latitude": location.coordinate.latitude,
+      "currentStepProgress": [
+        "distanceTraveled": currentStepProgress.distanceTraveled,
+        "userDistanceToManeuverLocation": currentStepProgress.userDistanceToManeuverLocation,
+        "distanceRemaining": currentStepProgress.distanceRemaining,
+        "fractionTraveled": currentStepProgress.fractionTraveled,
+        "durationRemaining": currentStepProgress.durationRemaining],
+      "currentStep": currentStepDictionnary,
+      "route": routeDictionnary,
+      "routeProgress": [
+        "isFinalLeg": progress.isFinalLeg,
+        "distanceTraveled": progress.distanceTraveled,
+        "distanceRemaining": progress.distanceRemaining,
+        "durationRemaining": progress.durationRemaining,
+        "fractionTraveled": progress.fractionTraveled,
+      ],
+      "nextDirection": [
+        "direction": currentStepProgress.step.maneuverDirection?.rawValue,
+        "type": currentStepProgress.step.maneuverType.rawValue,
+      ],
+    ])
   }
 }
 

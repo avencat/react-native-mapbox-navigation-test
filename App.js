@@ -30,6 +30,25 @@ const App: () => React$Node = () => {
       <View style={{ backgroundColor: 'red', flex: 1 }}>
         {isVisible && (
           <MapView
+            onProgressChange={({ nativeEvent: { currentStep, route, routeProgress, currentStepProgress, nextDirection } }) => {
+              const importantInformation = {
+                streetName: currentStep.bannerInstructions[0].primary.text,
+                distanceToNextManeuver:
+                  currentStepProgress.userDistanceToManeuverLocation,
+                instruction: currentStep.maneuver.instruction,
+                distance: route.distance,
+                distanceTraveled: routeProgress.distanceTraveled,
+                distanceRemaining: routeProgress.distanceRemaining,
+                expectedTravelTime: route.duration,
+                durationToNextManeuver: currentStepProgress.durationRemaining,
+                routeProgress,
+                currentStepProgress,
+                nextDirection,
+              };
+
+              console.log(importantInformation);
+            }}
+            shouldSimulateRoute
             style={styles.map}
             waypoints={[
               [38.9131752, -77.0324047],
