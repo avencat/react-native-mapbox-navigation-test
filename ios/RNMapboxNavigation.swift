@@ -101,8 +101,6 @@ class RNMapboxNavigationView: UIView, NavigationViewControllerDelegate {
         print(error)
         return
     }
-    
-    let step = currentStepProgress.step
 
     onProgressChange?([
       "longitude": location.coordinate.longitude,
